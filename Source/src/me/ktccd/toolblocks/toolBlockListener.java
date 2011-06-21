@@ -19,10 +19,12 @@ public class toolBlockListener extends BlockListener{
 		ToolBlock testTool = new ToolBlock();
 		Player player = event.getPlayer();
 		Block block = event.getBlock();
+		//toolblocks tool = new toolblocks();
 		if (testTool.getBreakable(player, block)==0){
-			if (!toolblocks.permissionHandler.has(player, "toolblock.override")){
+			if (!toolblocks.canUseReplace(player)){
 				event.setCancelled(true);
 				log.info(player.getName()+" failed to break: "+block.getTypeId());
+				log.info("[DEBUG] can use: "+toolblocks.canUseReplace(player));
 			}
 			else {
 				log.info("Letting "+player.getName()+" override, breaking "+block.getTypeId());

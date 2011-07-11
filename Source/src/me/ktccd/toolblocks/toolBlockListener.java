@@ -18,9 +18,13 @@ public class toolBlockListener extends BlockListener {
 	public boolean getBreakable(Player player, Block block) {
 		toolReader reader = plugin.getReader();
 		// is the block in the map?
-		
-		Set<Material> tools = reader.getTools(block.getType());
-		
+		Set<String> tools;
+		if (block.getType()==Material.STEP||block.getType()==Material.DOUBLE_STEP||block.getType()==Material.LOG||block.getType()==Material.LEAVES){
+			tools = reader.getTools(block.getType().toString()+"_"+block.getData());
+			}
+		else {
+			tools = reader.getTools(block.getType().toString());
+		}
 		if (tools != null && !tools.isEmpty()) {
 			if (tools.contains(player.getItemInHand().getType())) {
 				return true;

@@ -10,12 +10,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.util.config.Configuration;
 
 public class toolReader {
 
-	private Map<Material, Set<Material>> map = new HashMap<Material, Set<Material>>();
+	private Map<String, Set<String>> map = new HashMap<String, Set<String>>();
 
 	// time to make/read the config file
 	public Configuration myConfig;
@@ -26,23 +25,25 @@ public class toolReader {
 		plugin = instance;
 	}
 
-	public void add(Material block, Material item) {
-		Set<Material> items;
+	public void add(String block, String item) {
+		Set<String> items;
 		if (map.containsKey(block)) {
 			items = map.get(block);
 		} else {
-			items = new HashSet<Material>();
+			items = new HashSet<String>();
 		}
 		items.add(item);
 		map.put(block, items);
 	}
 
 	// Simple method to get the tools
-	public Set<Material> getTools(Material m) {
+	public Set<String> getTools(String m) {
 		if (map.containsKey(m)) {
-			return new HashSet<Material>(map.get(m)); // Create a copy to
+			return new HashSet<String>(map.get(m)); // Create a copy to
 														// prevent editing
 														// outside of the class
+		} else if  (map.containsKey(m.split("_")[0])){
+			return new HashSet<String>(map.get(m.split("_")[0]));
 		} else {
 			return null;
 		}
@@ -60,7 +61,7 @@ public class toolReader {
 				String data = myConfig.getString("" + current);
 				String[] tools = data.split(" ");
 				for (String s : tools) {
-					add(Material.valueOf(current), Material.valueOf(s));
+					add(current, s);
 				}
 			}
 		} else {

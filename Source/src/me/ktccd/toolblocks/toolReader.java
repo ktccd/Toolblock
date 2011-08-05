@@ -37,14 +37,12 @@ public class toolReader {
 	}
 
 	// Simple method to get the tools
-	public Set<String> getTools(String m) {
-		if (map.containsKey(m)) {
-			return new HashSet<String>(map.get(m)); // Create a copy to
-														// prevent editing
-														// outside of the class
-		} else if  (map.containsKey(m.split("_")[0])){
-			return new HashSet<String>(map.get(m.split("_")[0]));
-		} else {
+	public Set<String> getTools(String m, Byte b) {
+		if (map.containsKey(m+"_"+b)) { //Is there a specified datavalue for this block?
+			return new HashSet<String>(map.get(m+"_"+b));
+		} else if  (map.containsKey(m)){ //Ok then, is there a block at all in here?
+			return new HashSet<String>(map.get(m));
+		} else { //Ok, crap, let's return null.
 			return null;
 		}
 	}
@@ -57,7 +55,7 @@ public class toolReader {
 			// Time to read in the blocks and the items I guess
 			Iterator<String> i = myConfig.getKeys().iterator();
 			while (i.hasNext()) {
-				String current = i.next();
+				String current = i.next().toUpperCase();
 				String data = myConfig.getString("" + current);
 				String[] tools = data.split(" ");
 				for (String s : tools) {

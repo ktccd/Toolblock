@@ -1,7 +1,6 @@
 package me.ktccd.toolblocks;
 
 import java.util.Set;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -19,16 +18,12 @@ public class toolBlockListener extends BlockListener {
 		toolReader reader = plugin.getReader();
 		// is the block in the map?
 		Set<String> tools;
-		if (block.getType()==Material.STEP||block.getType()==Material.DOUBLE_STEP||block.getType()==Material.LOG||block.getType()==Material.LEAVES){
-			tools = reader.getTools(block.getType().toString()+"_"+block.getData());
-			}
-		else {
-			tools = reader.getTools(block.getType().toString());
-		}
+		tools = reader.getTools(block.getType().toString(), block.getData());
 		if (tools != null && !tools.isEmpty()) {
-			if (tools.contains(player.getItemInHand().getType())) {
+			if (tools.contains(player.getItemInHand().getType().toString())) {
 				return true;
 			} else {
+				player.sendMessage("Please use the correct tool.");
 				return false;
 			}
 		} else {

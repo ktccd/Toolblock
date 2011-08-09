@@ -15,9 +15,11 @@ import org.bukkit.util.config.Configuration;
 public class toolReader {
 
 	private Map<String, Set<String>> map = new HashMap<String, Set<String>>();
-
+	private String message;
+	private int hurt; //damage
 	// time to make/read the config file
 	public Configuration myConfig;
+	public Configuration secondConfig;
 
 	public toolblocks plugin;
 
@@ -46,9 +48,19 @@ public class toolReader {
 			return null;
 		}
 	}
+	
+	
+	public String getMessage(){
+		return message;
+	}
+	
+	public int getDamage() {
+		return hurt;
+	}
 
 	public void loadConfig() {
 		File configFile = new File(plugin.getDataFolder(), "toolconfig.yml");
+		File secondconfigFile = new File(plugin.getDataFolder(), "secondConfig.yml");
 		if (configFile.exists()) {
 			myConfig = new Configuration(configFile);
 			myConfig.load();
@@ -73,7 +85,32 @@ public class toolReader {
 					plugin.log.info("[toolblocks]No config file detected! This plugin won't work without it, generated default config file");
 					loadConfig();
 				} else {
-					plugin.log.info("[toolblocks]Error making default configuration");
+					plugin.log.info("[toolblocks]Error making default configuration.");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (secondconfigFile.exists()) {
+			secondConfig = new Configuration(secondconfigFile);
+			secondConfig.load();
+			// Time to read in the blocks and the items I guess
+			hurt=secondConfig.getInt("Damage", 0);
+			message=secondConfig.getString("Message","You do not have the right tool to break this");
+		} else {
+			try {
+				plugin.getDataFolder().mkdir();
+				secondconfigFile.createNewFile();
+				secondConfig = new Configuration(secondconfigFile);
+				secondConfig.setHeader("#Simple yml file to change the default message and damage when using the wrong tool.");
+				secondConfig.setProperty("Message", "You do not have the right tool to break this.");
+				secondConfig.setProperty("Damage", 0);
+				if (secondConfig.save()) {
+					plugin.log.info("[toolblocks]No second config file detected! This plugin will generate a default one though.");
+					hurt=secondConfig.getInt("Damage", 0);
+					message=secondConfig.getString("Message","You do not have the right tool to break this");
+				} else {
+					plugin.log.info("[toolblocks]Error making default second configuration.");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

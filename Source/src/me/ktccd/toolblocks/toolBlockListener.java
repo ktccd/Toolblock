@@ -23,7 +23,8 @@ public class toolBlockListener extends BlockListener {
 			if (tools.contains(player.getItemInHand().getType().toString())) {
 				return true;
 			} else {
-				player.sendMessage("Please use the correct tool.");
+				player.sendMessage(reader.getMessage());
+				player.damage(reader.getDamage());
 				return false;
 			}
 		} else {
